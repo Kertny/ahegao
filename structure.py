@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field, EmailStr
 from datetime import date
 
 class UserSchema(BaseModel):
-    user: str
+    name: str
     mail: EmailStr
     date: date
-
+    
