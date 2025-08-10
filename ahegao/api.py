@@ -29,4 +29,5 @@ async def user_add(
 
 @app.get("/users")
 async def get_users():
-    return {"ok": True}
+    user_id = await BaseManipulation.get_all()
+    return {"data": user_id}

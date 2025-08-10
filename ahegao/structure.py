@@ -3,11 +3,11 @@ from datetime import date
 
 class UserSchema(BaseModel):
     username: str
+    mail: EmailStr
+    date: date
 
 class AddintionalSchema(UserSchema):
     id: int
-    mail: EmailStr
-    date: date
 
 class Settings(BaseModel):
     db_url: str
