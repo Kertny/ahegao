@@ -1,0 +1,6 @@
+sqlalchemy
+fastapi
+uvicorn
+faststream[rabbit]
+pydantic
+pydantic[email]
