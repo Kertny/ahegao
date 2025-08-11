@@ -10,5 +10,5 @@ class AddintionalSchema(UserSchema):
     id: int
 
 class Settings(BaseModel):
-    db_url: str
-    rabbit_url: str
+    DB_URL: str
+    RABBIT_URL: str

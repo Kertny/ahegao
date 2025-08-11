@@ -1,11 +1,15 @@
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from pydantic import EmailStr, Field
+from structure import Settings
+import os
 import aiosqlite
 from datetime import date
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
+endpointBase = Settings.DB_URL = os.getenv("DATABASE")
+
 engine = create_async_engine(
-    "sqlite+aiosqlite:///base.db"
+    endpointBase
 )
 
 new_session = async_sessionmaker(engine, expire_on_commit=False)

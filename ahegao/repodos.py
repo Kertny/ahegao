@@ -20,3 +20,10 @@ class BaseManipulation:
             result = await session.execute(query)
             user_models = result.scalars().all()
             return user_models
+
+    @classmethod
+    async def get_user(cls, date: UserSchema):
+        async with new_session() as session:
+            query = select(UserORM).filter_by(username=date)
+            result = await session.execute(query)
+            return result.scalars().all()

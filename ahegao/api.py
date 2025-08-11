@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 from repodos import BaseManipulation
 from app import log
 from database import create_tables, drop_tables
+from rabbit import node
 from structure import UserSchema
 
 @asynccontextmanager
@@ -14,6 +15,7 @@ async def lifespan(app: FastAPI):
     yield
 
 app = FastAPI(lifespan=lifespan)
+app.include_router(node)
 
 @app.get("/")
 async def home_page():
@@ -31,3 +33,13 @@ async def user_add(
 async def get_users():
     user_id = await BaseManipulation.get_all()
     return {"data": user_id}
+
+@app.get("/abonent")
+async def get_user(
+    username: str
+):
+    try:
+        user = await BaseManipulation.get_user(username)
+        return user
+    except Exception as ex:
+        raise ex
