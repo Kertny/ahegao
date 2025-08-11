@@ -1,4 +1,4 @@
-from database import new_session, UserORM
+from database import new_session, Users
 from structure import UserSchema
 from sqlalchemy import select
 
@@ -7,7 +7,7 @@ class BaseManipulation:
     async def add_one(cls, user: UserSchema):
         async with new_session() as session:
             user_dict = user.model_dump()
-            date = UserORM(**user_dict)
+            date = Users(**user_dict)
             session.add(date)
             await session.flush()
             await session.commit()
@@ -16,7 +16,7 @@ class BaseManipulation:
     @classmethod
     async def get_all(cls):
         async with new_session() as session:
-            query = select(UserORM)
+            query = select(Users)
             result = await session.execute(query)
             user_models = result.scalars().all()
             return user_models
@@ -24,6 +24,6 @@ class BaseManipulation:
     @classmethod
     async def get_user(cls, date: UserSchema):
         async with new_session() as session:
-            query = select(UserORM).filter_by(username=date)
+            query = select(Users).filter_by(username=date)
             result = await session.execute(query)
             return result.scalars().all()

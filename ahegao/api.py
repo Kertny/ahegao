@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, APIRouter, Depends 
 from typing import Annotated
 from contextlib import asynccontextmanager
 from repodos import BaseManipulation
@@ -14,27 +14,26 @@ async def lifespan(app: FastAPI):
     log.warning("Databese ready to work")
     yield
 
-app = FastAPI(lifespan=lifespan)
-app.include_router(node)
+router = APIRouter()
 
-@app.get("/")
+@router.get("/")
 async def home_page():
     home = "hello my friend"
     return {"data": home}
 
-@app.post("/useradd")
+@router.post("/useradd")
 async def user_add(
     username: Annotated[UserSchema, Depends()]
 ):
     user_id = await BaseManipulation.add_one(username)
     return {"ok": True, "user_id": user_id}
 
-@app.get("/users")
+@router.get("/users")
 async def get_users():
     user_id = await BaseManipulation.get_all()
     return {"data": user_id}
 
-@app.get("/abonent")
+@router.get("/abonent")
 async def get_user(
     username: str
 ):
@@ -43,3 +42,7 @@ async def get_user(
         return user
     except Exception as ex:
         raise ex
+
+app = FastAPI(lifespan=lifespan)
+app.include_router(node)
+app.include_router(router)

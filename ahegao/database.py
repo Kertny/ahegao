@@ -17,7 +17,7 @@ new_session = async_sessionmaker(engine, expire_on_commit=False)
 class Model(DeclarativeBase):
     pass
 
-class UserORM(Model):
+class Users(Model):
     __tablename__ = "users"
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -25,6 +25,13 @@ class UserORM(Model):
     mail: Mapped[EmailStr] = Field(unique=True, index=True)
     date: Mapped[date]
 
+class Trees(Model):
+    __tablename__ = "trees"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str]
+    typr: Mapped[str]
+    
 
 async def create_tables():
     async with engine.begin() as connect:
