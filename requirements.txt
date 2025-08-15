@@ -4,3 +4,4 @@ uvicorn
 faststream[rabbit]
 pydantic
 pydantic[email]
+aiogram

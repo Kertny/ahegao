@@ -7,11 +7,11 @@ class BaseManipulation:
     async def add_one(cls, user: UserSchema):
         async with new_session() as session:
             user_dict = user.model_dump()
-            date = Users(**user_dict)
-            session.add(date)
+            data = Users(**user_dict)
+            session.add(data)
             await session.flush()
             await session.commit()
-            return date.id
+            return data.id
 
     @classmethod
     async def get_all(cls):

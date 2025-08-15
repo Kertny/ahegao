@@ -3,40 +3,37 @@ from pydantic import EmailStr, Field
 from structure import Settings
 import os
 import aiosqlite
-from datetime import date
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+import datetime
+import sqlalchemy as sa
+from sqlalchemy import schema, Column, Integer, String, Table, DateTime
+from sqlalchemy.orm import declarative_base
 
 endpointBase = Settings.DB_URL = os.getenv("DATABASE")
 
-engine = create_async_engine(
-    endpointBase
-)
+engine = create_async_engine(endpointBase)
 
 new_session = async_sessionmaker(engine, expire_on_commit=False)
 
-class Model(DeclarativeBase):
-    pass
+Ahegao = declarative_base()
 
-class Users(Model):
+class Users(Ahegao):
     __tablename__ = "users"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
-    username: Mapped[str]
-    mail: Mapped[EmailStr] = Field(unique=True, index=True)
-    date: Mapped[date]
+    id = sa.Column(sa.Integer, primary_key=True)
+    username = sa.Column(sa.String(255))
+    mail = sa.Column(sa.String(255), unique=True, index=True)
+    date = sa.Column(sa.DateTime)
 
-class Trees(Model):
-    __tablename__ = "trees"
+class Question(Ahegao):
+    __tablename__ = "question"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str]
-    typr: Mapped[str]
-    
+    id = sa.Column(sa.Integer, primary_key=True)
+    created_at = sa.Column(sa.DateTime)
 
 async def create_tables():
     async with engine.begin() as connect:
-        await connect.run_sync(Model.metadata.create_all)
+        await connect.run_sync(Ahegao.metadata.create_all)
 
 async def drop_tables():
     async with engine.begin() as connect:
-        await connect.run_sync(Model.metadata.drop_all)
+        await connect.run_sync(Ahegao.metadata.drop_all)
