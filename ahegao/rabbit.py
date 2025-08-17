@@ -1,6 +1,10 @@
 from faststream.rabbit.fastapi import RabbitRouter
+from structure import Settings
+import os
 
-node = RabbitRouter("amqp://guest:guest@localhost:5672/")
+rabbit = Settings.RABBIT_URL = os.getenv("RABBIT")
+
+node = RabbitRouter(rabbit)
 
 @node.post("/cross")
 def make_params(name: str):

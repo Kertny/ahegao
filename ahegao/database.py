@@ -7,7 +7,7 @@ import sqlalchemy as sa
 from sqlalchemy import schema, Column, Integer, String, Table, DateTime, func
 from sqlalchemy.orm import declarative_base, sessionmaker
 
-database = "sqlite:///base.db"
+database = Settings.DB_URL = os.getenv("DATABASE")
 
 engine = create_engine(database)
 Session = sessionmaker(bind=engine)
