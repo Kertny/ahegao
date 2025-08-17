@@ -1,19 +1,17 @@
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
-from pydantic import EmailStr, Field
+from sqlalchemy import create_engine
 from structure import Settings
 import os
 import aiosqlite
 import datetime
 import sqlalchemy as sa
-from sqlalchemy import schema, Column, Integer, String, Table, DateTime
-from sqlalchemy.orm import declarative_base
+from sqlalchemy import schema, Column, Integer, String, Table, DateTime, func
+from sqlalchemy.orm import declarative_base, sessionmaker
 
-endpointBase = Settings.DB_URL = os.getenv("DATABASE")
+database = "sqlite:///base.db"
 
-engine = create_async_engine(endpointBase)
-
-new_session = async_sessionmaker(engine, expire_on_commit=False)
-
+engine = create_engine(database)
+Session = sessionmaker(bind=engine)
+Metadata = sa.MetaData()
 Ahegao = declarative_base()
 
 class Users(Ahegao):
@@ -28,12 +26,13 @@ class Question(Ahegao):
     __tablename__ = "question"
 
     id = sa.Column(sa.Integer, primary_key=True)
-    created_at = sa.Column(sa.DateTime)
+    created_at = sa.Column(sa.DateTime, server_default=func.now())
+    updated_at = sa.Column(sa.DateTime, server_default=func.now(), server_onupdate=func.now())
+    title = sa.Column(sa.String(255))
+    metrics = sa.Column(sa.Boolean)
 
-async def create_tables():
-    async with engine.begin() as connect:
-        await connect.run_sync(Ahegao.metadata.create_all)
+def create_tables(engine = engine):
+    Ahegao.metadata.create_all(engine)
 
-async def drop_tables():
-    async with engine.begin() as connect:
-        await connect.run_sync(Ahegao.metadata.drop_all)
+def drop_tables(engine = engine):
+    Ahegao.metadata.drop_all(engine)

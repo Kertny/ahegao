@@ -5,43 +5,55 @@ from repodos import BaseManipulation
 from app import log
 from database import create_tables, drop_tables
 from rabbit import node
-from structure import UserSchema
+from structure import UserSchema, AnalyticsSchema
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    await drop_tables()
-    await create_tables()
+    drop_tables()
+    create_tables()
     log.warning("Databese ready to work")
     yield
 
 router = APIRouter()
 
 @router.get("/")
-async def home_page():
+def home_page():
     home = "hello my friend"
     return {"data": home}
 
 @router.post("/useradd")
-async def user_add(
+def user_add(
     username: Annotated[UserSchema, Depends()]
 ):
-    user_id = await BaseManipulation.add_one(username)
+    user_id = BaseManipulation.add_one(username)
     return {"ok": True, "user_id": user_id}
 
 @router.get("/users")
-async def get_users():
-    user_id = await BaseManipulation.get_all()
+def get_users():
+    user_id = BaseManipulation.get_all()
     return {"data": user_id}
 
 @router.get("/abonent")
-async def get_user(
+def get_user(
     username: str
 ):
     try:
-        user = await BaseManipulation.get_user(username)
+        user = BaseManipulation.get_user(username)
         return user
     except Exception as ex:
         raise ex
+    
+@router.post("/question")
+def question_integrate(
+    data_inc: Annotated[AnalyticsSchema, Depends()]
+):
+    upload = BaseManipulation.question_create(data_inc)
+    return {"data": upload}
+
+@router.get("/getquestion")
+def get_question(id: int):
+    data = BaseManipulation.question_search(id)
+    return data
 
 app = FastAPI(lifespan=lifespan)
 app.include_router(node)

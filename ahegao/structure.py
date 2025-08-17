@@ -9,6 +9,15 @@ class UserSchema(BaseModel):
 class AddintionalSchema(UserSchema):
     id: int
 
+class AnalyticsSchema(BaseModel):
+    title: str
+    metrics: bool
+
+class AnonsSchema(AnalyticsSchema):
+    id: int
+    create: date
+    update: date
+
 class Settings(BaseModel):
     DB_URL: str
     RABBIT_URL: str

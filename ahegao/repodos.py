@@ -1,29 +1,44 @@
-from database import new_session, Users
-from structure import UserSchema
+from database import Session, Users, Question
+from structure import UserSchema, AnalyticsSchema
 from sqlalchemy import select
 
 class BaseManipulation:
     @classmethod
-    async def add_one(cls, user: UserSchema):
-        async with new_session() as session:
+    def add_one(cls, user: UserSchema):
+        with Session() as session:
             user_dict = user.model_dump()
             data = Users(**user_dict)
             session.add(data)
-            await session.flush()
-            await session.commit()
+            session.commit()
             return data.id
 
     @classmethod
-    async def get_all(cls):
-        async with new_session() as session:
+    def get_all(cls):
+        with Session() as session:
             query = select(Users)
-            result = await session.execute(query)
+            result = session.execute(query)
             user_models = result.scalars().all()
             return user_models
 
     @classmethod
-    async def get_user(cls, date: UserSchema):
-        async with new_session() as session:
+    def get_user(cls, date: UserSchema):
+        with Session() as session:
             query = select(Users).filter_by(username=date)
-            result = await session.execute(query)
+            result = session.execute(query)
+            return result.scalars().all()
+        
+    @classmethod
+    def question_create(cls, data: AnalyticsSchema):
+        with Session() as session:
+            data_dict = data.model_dump()
+            inter = Question(**data_dict)
+            session.add(inter)
+            session.commit()
+            return inter.id
+        
+    @classmethod
+    def question_search(cls, id: int):
+        with Session() as session:
+            query = select(Question).filter_by(id=id)
+            result = session.execute(query)
             return result.scalars().all()
