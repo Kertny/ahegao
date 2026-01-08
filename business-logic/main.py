@@ -2,9 +2,11 @@ from faststream.rabbit.broker import RabbitBroker
 from faststream import FastStream
 import logging
 import asyncio
+import os
 
+rabbit = os.getenv("RABBIT")
 log = logging.getLogger()
-reception = RabbitBroker()
+reception = RabbitBroker(rabbit)
 app = FastStream(reception)
 
 @reception.subscriber("cross")

@@ -1,35 +1,35 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, MetaData, String, DateTime, func, Boolean
 from structure import Settings
 import os
 import aiosqlite
 import datetime
-import sqlalchemy as sa
-from sqlalchemy import schema, Column, Integer, String, Table, DateTime, func
-from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase, sessionmaker
 
-database = Settings.DB_URL = os.getenv("DATABASE")
+database = os.getenv("DATABASE")
 
 engine = create_engine(database)
 Session = sessionmaker(bind=engine)
-Metadata = sa.MetaData()
-Ahegao = declarative_base()
+Metadata = MetaData()
+
+class Ahegao(DeclarativeBase):
+    pass
 
 class Users(Ahegao):
     __tablename__ = "users"
 
-    id = sa.Column(sa.Integer, primary_key=True)
-    username = sa.Column(sa.String(255))
-    mail = sa.Column(sa.String(255), unique=True, index=True)
-    date = sa.Column(sa.DateTime)
+    id: Mapped[int] = mapped_column(primary_key=True) # sa.Column(sa.Integer, primary_key=True)
+    username: Mapped[str] = mapped_column(String(255)) # sa.Column(sa.String(255))
+    mail: Mapped[str] = mapped_column(String(255), unique=True, index=True) # sa.Column(sa.String(255), unique=True, index=True)
+    date: Mapped[datetime] = mapped_column(DateTime) #  sa.Column(sa.DateTime)
 
 class Question(Ahegao):
     __tablename__ = "question"
 
-    id = sa.Column(sa.Integer, primary_key=True)
-    created_at = sa.Column(sa.DateTime, server_default=func.now())
-    updated_at = sa.Column(sa.DateTime, server_default=func.now(), server_onupdate=func.now())
-    title = sa.Column(sa.String(255))
-    metrics = sa.Column(sa.Boolean)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now()) # sa.Column(sa.DateTime, server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now(), server_onupdate=func.now())
+    title: Mapped[str] = mapped_column(String(255)) # sa.Column(sa.String(255))
+    metrics: Mapped[bool] = mapped_column(Boolean) # sa.Column(sa.Boolean)
 
 def create_tables(engine = engine):
     Ahegao.metadata.create_all(engine)

@@ -55,6 +55,11 @@ def get_question(id: int):
     data = BaseManipulation.question_search(id)
     return data
 
+@router.post("/qmodify")
+def question_modify(id: int):
+    data = BaseManipulation.question_modify(id)
+    return data
+
 app = FastAPI(lifespan=lifespan)
 app.include_router(node)
 app.include_router(router)

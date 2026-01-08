@@ -42,3 +42,14 @@ class BaseManipulation:
             query = select(Question).filter_by(id=id)
             result = session.execute(query)
             return result.scalars().all()
+
+    @classmethod
+    def question_modify(cls, id: int):
+        with Session() as session:
+            answer = session.get(Question, id)
+            metrics = not answer.metrics
+            print(metrics, answer.metrics)
+            session.query(Question).filter_by(id=id).update({'metrics': metrics})
+            session.commit()
+            return 'data modified'
+
