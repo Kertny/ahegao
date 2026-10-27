@@ -2,7 +2,7 @@ from faststream.rabbit.fastapi import RabbitRouter
 from structure import Settings
 import os
 
-rabbit = os.getenv("RABBIT")
+rabbit = "amqp://guest:guest@172.20.10.5:5672/"
 
 node = RabbitRouter(rabbit)
 

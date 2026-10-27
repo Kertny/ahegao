@@ -3,7 +3,7 @@ from datetime import date
 
 class UserSchema(BaseModel):
     username: str
-    mail: EmailStr
+    # mail: EmailStr
     date: date
 
 class AddintionalSchema(UserSchema):

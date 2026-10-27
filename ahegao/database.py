@@ -1,13 +1,13 @@
 from sqlalchemy import create_engine, MetaData, String, DateTime, func, Boolean
 from structure import Settings
 import os
-import aiosqlite
+import psycopg2
 import datetime
 from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase, sessionmaker
 
 database = os.getenv("DATABASE")
 
-engine = create_engine(database)
+engine = create_engine(url="postgresql+psycopg2://postgres:tttest26@172.20.10.5:5432/postgres")
 Session = sessionmaker(bind=engine)
 Metadata = MetaData()
 

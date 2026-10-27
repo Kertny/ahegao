@@ -1,0 +1,11 @@
+docker_compose('./docker-compose.yml')
+
+docker_build('ahegao-application:latest',         
+    './',                  # Контекст сборки
+    live_update=[
+        sync('./app', '/app'),   # Синхронизируем локальную папку с контейнером
+        run('python app.py'),      # Выполняем команду, если изменился package.json
+        restart_container()      # Перезапускаем процесс внутри контейнера
+    ]
+)
+

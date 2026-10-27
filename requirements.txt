@@ -4,4 +4,5 @@ uvicorn
 faststream[rabbit]
 pydantic
 pydantic[email]
-aiogram
+# aiogram
+psycopg2-binary
