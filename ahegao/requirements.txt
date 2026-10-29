@@ -1,0 +1,9 @@
+sqlalchemy
+fastapi
+uvicorn
+faststream
+faststream[rabbit]
+pydantic
+pydantic[email]
+# aiogram
+psycopg2-binary
